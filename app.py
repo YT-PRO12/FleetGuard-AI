@@ -86,17 +86,40 @@ elif page == "Predict Failure Risk":
 elif page == "Model Results":
     st.title("Model Results")
     st.write("Four classical classification algorithms were compared using the same train/test split.")
-    rows = []
-    for name, m in meta["results"].items():
-        rows.append({
-            "Model": name,
-            "Accuracy": m["accuracy"],
-            "Precision": m["precision"],
-            "Recall": m["recall"],
-            "F1": m["f1"],
-            "ROC-AUC": m["roc_auc"],
-        })
-    result_df = pd.DataFrame(rows).sort_values("F1", ascending=False)
-    st.dataframe(result_df, use_container_width=True, hide_index=True)
-    st.success(f"Selected Model: {meta['selected_model']} (highest failure-class F1 score in this simplified version)")
+
+    # Robustly support both the full metrics.json and the simplified one.
+    results = meta.get("results", {})
+
+    if results:
+        rows = []
+        for name, m in results.items():
+            rows.append({
+                "Model": name,
+                "Accuracy": m.get("accuracy", 0.0),
+                "Precision": m.get("precision", 0.0),
+                "Recall": m.get("recall", 0.0),
+                "F1": m.get("f1", 0.0),
+                "ROC-AUC": m.get("roc_auc", 0.0),
+            })
+
+        result_df = pd.DataFrame(rows).sort_values("F1", ascending=False)
+        st.dataframe(result_df, use_container_width=True, hide_index=True)
+
+    else:
+        # Fallback if metrics.json was overwritten by the step-by-step script.
+        st.warning("Detailed model-comparison results were not found in metrics.json.")
+        fallback_row = {
+            "Model": meta.get("selected_model", "Random Forest"),
+            "Accuracy": meta.get("Accuracy", meta.get("accuracy", 0.0)),
+            "Precision": meta.get("Precision", meta.get("precision", 0.0)),
+            "Recall": meta.get("Recall", meta.get("recall", 0.0)),
+            "F1": meta.get("F1 Score", meta.get("f1", 0.0)),
+            "ROC-AUC": meta.get("ROC-AUC", meta.get("roc_auc", 0.0)),
+        }
+        st.dataframe(pd.DataFrame([fallback_row]), use_container_width=True, hide_index=True)
+
+    st.success(
+        f"Selected Model: {meta.get('selected_model', 'Random Forest')} "
+        "(highest failure-class F1 score in this simplified version)"
+    )
     st.caption("Because failures are rare, F1 and recall are more informative than accuracy alone.")
