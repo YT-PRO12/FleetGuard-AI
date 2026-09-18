@@ -1,0 +1,13 @@
+Shape: (10000, 14)
+Missing values: 0
+Duplicates: 0
+Failure rate: 3.39 %
+
+Model results:
+Logistic Regression  Accuracy=0.825 Precision=0.142 Recall=0.824 F1=0.242 ROC-AUC=0.907
+Decision Tree        Accuracy=0.930 Precision=0.312 Recall=0.882 F1=0.462 ROC-AUC=0.908
+Random Forest        Accuracy=0.971 Precision=0.556 Recall=0.735 F1=0.633 ROC-AUC=0.964
+SVM                  Accuracy=0.917 Precision=0.279 Recall=0.897 F1=0.425 ROC-AUC=0.965
+
+Selected model: Random Forest
+Saved to models/best_model.joblib
