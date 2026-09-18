@@ -1,8 +1,45 @@
 {
   "selected_model": "Random Forest",
-  "Accuracy": 0.9545,
-  "Precision": 0.4172661870503597,
-  "Recall": 0.8529411764705882,
-  "F1 Score": 0.5603864734299517,
-  "ROC-AUC": 0.9624284496407257
+  "selection_rule": "Highest test-set F1 score for the failure class (simple student version)",
+  "features": [
+    "Type",
+    "Air temperature [K]",
+    "Process temperature [K]",
+    "Rotational speed [rpm]",
+    "Torque [Nm]",
+    "Tool wear [min]"
+  ],
+  "target": "Machine failure",
+  "failure_rate": 0.0339,
+  "test_size": 2000,
+  "results": {
+    "Logistic Regression": {
+      "accuracy": 0.8245,
+      "precision": 0.1417721519,
+      "recall": 0.8235294118,
+      "f1": 0.2419006479,
+      "roc_auc": 0.906954086
+    },
+    "Decision Tree": {
+      "accuracy": 0.93,
+      "precision": 0.3125,
+      "recall": 0.8823529412,
+      "f1": 0.4615384615,
+      "roc_auc": 0.9082633053
+    },
+    "Random Forest": {
+      "accuracy": 0.971,
+      "precision": 0.5555555556,
+      "recall": 0.7352941176,
+      "f1": 0.6329113924,
+      "roc_auc": 0.9637452807
+    },
+    "SVM": {
+      "accuracy": 0.9175,
+      "precision": 0.2785388128,
+      "recall": 0.8970588235,
+      "f1": 0.425087108,
+      "roc_auc": 0.965465534
+    }
+  }
 }
