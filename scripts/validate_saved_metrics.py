@@ -10,14 +10,14 @@ def validate(path=METRICS):
     data = json.loads(Path(path).read_text(encoding="utf-8"))
     results = data["results"]
     assert results and data["selected_model"] in results
-    assert isinstance(data["test_size"], int) and data["test_size"] > 0
+    assert type(data["test_size"]) is int and data["test_size"] > 0
     assert len(data["features"]) == len(set(data["features"]))
     assert data["target"] not in data["features"]
 
     for name, item in results.items():
         for metric in ("accuracy", "precision", "recall", "f1", "roc_auc"):
             value = item[metric]
-            assert isinstance(value, (int, float)) and math.isfinite(value)
+            assert type(value) in (int, float) and math.isfinite(value)
             assert 0 <= value <= 1, (name, metric, value)
         p, r = item["precision"], item["recall"]
         expected_f1 = 2 * p * r / (p + r) if p + r else 0
