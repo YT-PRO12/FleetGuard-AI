@@ -11,6 +11,12 @@ def validate(path=METRICS):
     results = data["results"]
     assert results and data["selected_model"] in results
     assert type(data["test_size"]) is int and data["test_size"] > 0
+    prevalence = data["failure_rate"]
+    assert type(prevalence) in (int, float) and math.isfinite(prevalence)
+    assert 0 <= prevalence <= 1, "Failure prevalence must be in [0, 1]"
+    assert isinstance(data["features"], list) and data["features"]
+    assert all(type(feature) is str and feature.strip() for feature in data["features"])
+    assert type(data["target"]) is str and data["target"].strip()
     assert len(data["features"]) == len(set(data["features"]))
     assert data["target"] not in data["features"]
 
