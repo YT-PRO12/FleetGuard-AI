@@ -6,7 +6,10 @@ result is not an unbiased untouched-final-test estimate.
 import json
 from pathlib import Path
 
-from validate_saved_metrics import METRICS, validate
+if __package__:
+    from .validate_saved_metrics import METRICS, validate
+else:
+    from validate_saved_metrics import METRICS, validate
 
 
 def report(path=METRICS):
