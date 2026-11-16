@@ -1,0 +1,37 @@
+name: Verify saved ML evidence
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'models/metrics.json'
+      - 'scripts/**'
+      - 'tests/**'
+      - '.github/workflows/verify-metrics.yml'
+  pull_request:
+    paths:
+      - 'models/metrics.json'
+      - 'scripts/**'
+      - 'tests/**'
+      - '.github/workflows/verify-metrics.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  evidence:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile offline verification scripts
+        run: python -m compileall -q scripts tests
+      - name: Validate saved model comparison
+        run: python scripts/validate_saved_metrics.py
+      - name: Run evidence and feature-contract regressions
+        run: python -m unittest discover -s tests -p 'test_*.py'
+      - name: Generate reviewable comparison metadata
+        run: python scripts/report_model_comparison.py
